@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Practice</title>
+<style>
+:root{--bg:#f2f5f9;--surface:#fff;--ink:#16213a;--mute:#5b6679;--line:#d9e0ea;--acc:#0f6e63;--acc-ink:#fff;--ok:#127a43;--okbg:#e3f4ea;--bad:#b4381b;--badbg:#fbe9e3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--surface:#18203a;--ink:#e8edf7;--mute:#9aa6bd;--line:#2b3555;--acc:#4fc4b3;--acc-ink:#06201c;--ok:#6fd89b;--okbg:#14301f;--bad:#ff9a7e;--badbg:#3a1d16;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1424;--surface:#18203a;--ink:#e8edf7;--mute:#9aa6bd;--line:#2b3555;--acc:#4fc4b3;--acc-ink:#06201c;--ok:#6fd89b;--okbg:#14301f;--bad:#ff9a7e;--badbg:#3a1d16;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font:700 1.6rem/1.2 Georgia,"Times New Roman",serif;margin:8px 0 4px}
+.sub{color:var(--mute);margin:0 0 18px}
+nav{display:flex;overflow-x:auto;gap:6px;background:var(--line);padding:4px;border-radius:12px;margin-bottom:18px}
+nav button{flex:1 0 auto;border:0;background:transparent;color:var(--mute);font:600 .85rem system-ui,sans-serif;padding:10px 12px;border-radius:9px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--surface);color:var(--ink)}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.meta{display:flex;justify-content:space-between;color:var(--mute);font-size:.9rem;margin:0 0 10px}
+.card{display:block;width:100%;min-height:220px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;margin-bottom:14px}
+.word{font:700 2.2rem/1.2 Georgia,serif}
+.hint{color:var(--mute);margin-top:14px;font-size:.95rem}
+.def{font-size:1.15rem;font-weight:600}
+.ex{font:italic 1.05rem/1.5 Georgia,serif;color:var(--mute);margin-top:14px}
+.row{display:flex;gap:10px}
+.row .b{flex:1}
+.b{display:block;width:100%;border:0;background:var(--acc);color:var(--acc-ink);font-weight:600;font-size:1rem;padding:14px;border-radius:12px;cursor:pointer;margin-top:10px}
+.row .b{margin-top:0}
+.b.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+h2{font:700 1.3rem Georgia,serif;margin:6px 0 10px}
+.q{font:600 1.2rem/1.45 Georgia,serif;margin:0 0 14px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:1rem;cursor:pointer}
+.opt:disabled{cursor:default}
+.opt.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fb{margin-top:14px}
+.fb p{margin:0 0 4px}
+.passage{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:12px;font:1.08rem/1.75 Georgia,serif}
+.passage h3{font:700 1.2rem Georgia,serif;margin:0 0 8px}
+.w{border:0;border-bottom:2px dotted var(--acc);background:transparent;color:inherit;font:inherit;padding:0;cursor:pointer}
+#gloss{min-height:2.6em;color:var(--mute);font-size:.95rem;margin:0 0 18px}
+#gloss b{color:var(--ink)}
+.ipa{font:1.3rem/1.3 "Noto Sans","Segoe UI","Lucida Sans Unicode",system-ui,sans-serif;color:var(--acc);margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.ph{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 4px;cursor:pointer;text-align:center}
+.ph b{display:block;font:600 1.35rem "Noto Sans","Segoe UI",system-ui,sans-serif;color:var(--acc)}
+.ph span{font-size:.85rem;color:var(--mute)}
+progress{width:100%;height:14px;accent-color:var(--acc)}
+#prog p{margin:12px 0}
+.inp{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:1.1rem system-ui,sans-serif;margin-bottom:10px}
+.opt.sel{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);font-weight:600}
+.b:disabled{opacity:.5;cursor:default}
+#nm{display:none}
+main.noname #nm{display:block}
+main.noname nav,main.noname section:not(#nm){display:none}
+@media (prefers-reduced-motion:no-preference){.opt,.b,nav button{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<main>
+<h1>English Practice</h1>
+<p class="sub">Intermediate level (B1–B2). Pick a skill to start. <span id="hi"></span></p>
+<section id="nm"><h2>Welcome</h2><p>Please type your name to start.</p><input class="inp" id="nmi" maxlength="30" autocomplete="name" aria-label="Your name"><button class="b" id="nmb">Start</button></section>
+<nav role="tablist" aria-label="Skills">
+<button role="tab" aria-selected="true" data-t="vocab">Vocabulary</button>
+<button role="tab" aria-selected="false" data-t="grammar">Grammar</button>
+<button role="tab" aria-selected="false" data-t="reading">Reading</button>
+<button role="tab" aria-selected="false" data-t="chart">Sounds</button>
+<button role="tab" aria-selected="false" data-t="prog">Progress</button>
+<button role="tab" aria-selected="false" data-t="top">Top 10</button>
+</nav>
+<section id="vocab"></section>
+<section id="grammar" hidden><button class="b alt" id="tt" style="margin:0 0 14px">Take the test: all 100 questions</button><div id="gq"></div></section>
+<section id="chart" hidden></section>
+<section id="prog" hidden></section>
+<section id="top" hidden></section>
+<section id="reading" hidden>
+<div class="passage" id="passage"></div>
+<p id="gloss">Tap a dotted word to see its meaning.</p>
+<div id="rq"></div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+
+// Tabs
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["vocab","grammar","reading","chart","prog","top"].forEach(id=>$("#"+id).hidden=(id!==b.dataset.t));if(b.dataset.t==="prog")showProg();if(b.dataset.t==="top")showTop();
+});
+
+// Vocabulary
+const V=[
+["reluctant","unwilling and hesitant","She was reluctant to speak in front of the class."],
+["thrive","to grow or develop very well","Plants thrive in bright light."],
+["ambiguous","having more than one possible meaning","The instructions were ambiguous, so we asked for help."],
+["reliable","able to be trusted","He is a reliable friend who always keeps his promises."],
+["postpone","to move something to a later time","They postponed the meeting until Friday."],
+["convince","to make someone believe or agree","I convinced him to join the study group."],
+["struggle","to try hard despite difficulty","Many students struggle with English spelling."],
+["accurate","correct in every detail","The map was accurate, so we never got lost."],
+["afford","to have enough money to pay for","We can’t afford a new car this year."],
+["ongoing","continuing; still happening","The ongoing project will finish in June."],
+["ensure","to make certain that something happens","Please ensure that all doors are locked."],
+["overcome","to succeed in dealing with a problem","She overcame her fear of public speaking."]
+];
+const IPA12={reluctant:"rɪˈlʌktənt",thrive:"θraɪv",ambiguous:"æmˈbɪɡjuəs",reliable:"rɪˈlaɪəbəl",postpone:"pəʊstˈpəʊn",convince:"kənˈvɪns",struggle:"ˈstrʌɡəl",accurate:"ˈækjərət",afford:"əˈfɔːd",ongoing:"ˈɒnɡəʊɪŋ",ensure:"ɪnˈʃɔː",overcome:"ˌəʊvəˈkʌm"};
+const RAW=`achieve|əˈtʃiːv|to succeed in doing something
+advice|ədˈvaɪs|an opinion about what someone should do
+agree|əˈɡriː|to have the same opinion
+allow|əˈlaʊ|to let someone do something
+ancient|ˈeɪnʃənt|very old; from long ago
+appear|əˈpɪə|to seem; to come into view
+approach|əˈprəʊtʃ|to come near; a way of doing something
+argue|ˈɑːɡjuː|to disagree using angry words or reasons
+arrange|əˈreɪndʒ|to plan or organise
+attract|əˈtrækt|to pull towards; to interest
+avoid|əˈvɔɪd|to stay away from
+beneficial|ˌbenɪˈfɪʃəl|having a good effect
+borrow|ˈbɒrəʊ|to take something and give it back later
+brave|breɪv|ready to face danger
+career|kəˈrɪə|a job you do for many years
+challenge|ˈtʃælɪndʒ|something difficult that tests you
+cheap|tʃiːp|low in price
+climate|ˈklaɪmət|the usual weather in a place
+collect|kəˈlekt|to gather things together
+comfortable|ˈkʌmftəbəl|pleasant and relaxing
+compare|kəmˈpeə|to look at how things are alike or different
+complain|kəmˈpleɪn|to say you are unhappy about something
+confident|ˈkɒnfɪdənt|sure of yourself
+consider|kənˈsɪdə|to think about carefully
+continue|kənˈtɪnjuː|to keep going
+create|kriˈeɪt|to make something new
+crowded|ˈkraʊdɪd|full of people
+curious|ˈkjʊəriəs|wanting to know more
+damage|ˈdæmɪdʒ|harm done to something
+decide|dɪˈsaɪd|to make a choice
+delay|dɪˈleɪ|to make something late
+describe|dɪˈskraɪb|to say what something is like
+develop|dɪˈveləp|to grow or improve
+disappear|ˌdɪsəˈpɪə|to go out of sight
+discover|dɪˈskʌvə|to find something for the first time
+distance|ˈdɪstəns|the space between two places
+earn|ɜːn|to get money for work
+effort|ˈefət|hard physical or mental work
+empty|ˈempti|with nothing inside
+encourage|ɪnˈkʌrɪdʒ|to give someone confidence
+environment|ɪnˈvaɪrənmənt|the natural world around us
+escape|ɪˈskeɪp|to get away from a place
+excellent|ˈeksələnt|extremely good
+expensive|ɪkˈspensɪv|costing a lot of money
+experience|ɪkˈspɪəriəns|knowledge from doing something
+explain|ɪkˈspleɪn|to make something clear
+familiar|fəˈmɪliə|well known to you
+fashionable|ˈfæʃənəbəl|popular at the moment
+foreign|ˈfɒrən|from another country
+forget|fəˈɡet|to not remember
+generous|ˈdʒenərəs|happy to give to others
+guess|ɡes|to give an answer without knowing
+habit|ˈhæbɪt|something you do regularly
+honest|ˈɒnɪst|always telling the truth
+imagine|ɪˈmædʒɪn|to form a picture in your mind
+improve|ɪmˈpruːv|to get better
+include|ɪnˈkluːd|to have as a part
+independent|ˌɪndɪˈpendənt|not needing help from others
+introduce|ˌɪntrəˈdjuːs|to present someone to another person
+invite|ɪnˈvaɪt|to ask someone to come
+journey|ˈdʒɜːni|a trip from one place to another
+knowledge|ˈnɒlɪdʒ|what you know
+lonely|ˈləʊnli|unhappy because you are alone
+manage|ˈmænɪdʒ|to succeed in doing something difficult
+miss|mɪs|to feel sad that someone is not there
+nervous|ˈnɜːvəs|a little afraid or worried
+notice|ˈnəʊtɪs|to see or become aware of
+opportunity|ˌɒpəˈtjuːnəti|a chance to do something good
+patient|ˈpeɪʃənt|able to wait calmly
+persuade|pəˈsweɪd|to make someone do something by talking
+polite|pəˈlaɪt|having good manners
+prefer|prɪˈfɜː|to like one thing more than another
+prepare|prɪˈpeə|to get ready
+protect|prəˈtekt|to keep safe from harm
+recommend|ˌrekəˈmend|to say something is good
+refuse|rɪˈfjuːz|to say no
+regret|rɪˈɡret|to feel sorry about something you did
+remind|rɪˈmaɪnd|to help someone remember
+repair|rɪˈpeə|to fix something broken
+reply|rɪˈplaɪ|to answer
+rescue|ˈreskjuː|to save from danger
+respect|rɪˈspekt|to admire; to treat well
+rude|ruːd|not polite
+safe|seɪf|not in danger
+satisfied|ˈsætɪsfaɪd|pleased with what you have
+search|sɜːtʃ|to look carefully for something
+shy|ʃaɪ|nervous around other people
+suitable|ˈsuːtəbəl|right for a purpose
+survive|səˈvaɪv|to stay alive
+temperature|ˈtemprətʃə|how hot or cold something is
+valuable|ˈvæljuəbəl|worth a lot of money
+wonder|ˈwʌndə|to want to know something
+worried|ˈwʌrid|unhappy about something that might happen
+absent|ˈæbsənt|not at a place where you should be
+accept|əkˈsept|to take something that is offered
+admire|ədˈmaɪə|to respect and like someone
+adventure|ədˈventʃə|an exciting or unusual experience
+afraid|əˈfreɪd|feeling fear
+amazing|əˈmeɪzɪŋ|very surprising and wonderful
+annoyed|əˈnɔɪd|a little angry
+anxious|ˈæŋkʃəs|worried and nervous
+apologise|əˈpɒlədʒaɪz|to say you are sorry
+available|əˈveɪləbəl|able to be used or obtained
+award|əˈwɔːd|a prize for doing something well
+awful|ˈɔːfəl|very bad
+balance|ˈbæləns|a steady position; a fair mix
+bored|bɔːd|not interested; tired of something
+breathe|briːð|to take air into your body
+calm|kɑːm|quiet and not worried
+careful|ˈkeəfəl|thinking about what you do
+celebrate|ˈseləbreɪt|to do something special for a happy event
+century|ˈsentʃəri|a period of one hundred years
+cheerful|ˈtʃɪəfəl|happy and positive
+citizen|ˈsɪtɪzən|a person who belongs to a country
+clever|ˈklevə|quick at learning and understanding
+common|ˈkɒmən|happening often
+community|kəˈmjuːnəti|the people who live in an area
+connect|kəˈnekt|to join things together
+cooperate|kəʊˈɒpəreɪt|to work together
+courage|ˈkʌrɪdʒ|the ability to do something frightening
+custom|ˈkʌstəm|a traditional way of doing things
+dangerous|ˈdeɪndʒərəs|likely to cause harm
+deliver|dɪˈlɪvə|to take something to a place
+depend|dɪˈpend|to rely on someone or something
+disappointed|ˌdɪsəˈpɔɪntɪd|sad because things were not as good as hoped
+elderly|ˈeldəli|old
+embarrassed|ɪmˈbærəst|feeling shy or ashamed
+energy|ˈenədʒi|the power to be active
+enormous|ɪˈnɔːməs|extremely large
+equal|ˈiːkwəl|the same in size or value
+exhausted|ɪɡˈzɔːstɪd|very tired
+fortunate|ˈfɔːtʃənət|lucky
+freedom|ˈfriːdəm|the right to do what you want
+frightened|ˈfraɪtənd|afraid
+furniture|ˈfɜːnɪtʃə|tables, chairs, beds and similar things
+grateful|ˈɡreɪtfəl|thankful
+guilty|ˈɡɪlti|feeling bad about something wrong
+harmful|ˈhɑːmfəl|causing damage
+helpful|ˈhelpfəl|giving help
+hesitate|ˈhezɪteɪt|to pause before doing something
+huge|hjuːdʒ|very big
+identify|aɪˈdentɪfaɪ|to recognise who or what something is`;
+const BANK=V.map(([w,d,e])=>[w,d,e,IPA12[w]]).concat(RAW.trim().split("\n").map(l=>{const[a,b,c]=l.split("|");return[a,c,"",b];}));
+function pick10(){const a=[...BANK];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,10);}
+let vi=0,vflip=false,vmiss=[],vdeck=pick10(),vround=vdeck,vgot=0;
+function vRender(){
+  const el=$("#vocab");
+  if(vi>=vdeck.length){
+    el.innerHTML=`<h2>Round complete</h2><p>You knew ${vgot} of ${vdeck.length} words.</p>`+
+      `<button class="b" onclick="vCheck()">Practise these words</button><button class="b alt" onclick="vType('spell')">Spelling practice</button><button class="b alt" onclick="vType('dict')">Dictation</button>`+(vmiss.length?`<button class="b" onclick="vRetry()">Review ${vmiss.length} missed</button>`:"")+
+      `<button class="b alt" onclick="vRestart()">New 10 words</button>`;
+    return;
+  }
+  const [w,d,e,p]=vdeck[vi];
+  el.innerHTML=`<div class="row" style="margin-bottom:12px"><button class="b alt" onclick="vType('spell')">Spelling</button><button class="b alt" onclick="vType('dict')">Dictation</button></div><p class="meta">Card ${vi+1} of ${vdeck.length}</p>
+  <button class="b alt" onclick="say('${w}')" style="margin:0 0 10px">🔊 Listen</button><button class="card" onclick="vFlip()" aria-label="Flip card">${vflip?`<div class="def">${d}</div>${e?'<div class="ex">'+e+'</div>':""}`:`<div class="word">${w}</div><div class="ipa">/${p}/</div><div class="hint">Tap to see the meaning</div>`}</button>`+
+  (vflip?`<div class="row"><button class="b alt" onclick="vNext(0)">Still learning</button><button class="b" onclick="vNext(1)">Got it</button></div>`:"");
+}
+function vFlip(){vflip=!vflip;vRender();}
+function vNext(k){if(k){vgot++;mark("known",vdeck[vi][0]);}else vmiss.push(vdeck[vi]);vi++;vflip=false;vRender();}
+function vRetry(){vdeck=vmiss;vmiss=[];vi=0;vgot=0;vflip=false;vRender();}
+function vCheck(){const items=vround.map(([w,d,e,p],n)=>{const o=shuf([w,...shuf(BANK.filter(x=>x[0]!==w)).slice(0,3).map(x=>x[0])]);return{q:n%2?`Which word is pronounced /${p}/?`:`Which word means: ${d}?`,o,a:o.indexOf(w),e:`${w} /${p}/ means: ${d}.`};});Quiz("#vocab",items,(s,n)=>{P.vq=(P.vq||0)+s;P.vqn=(P.vqn||0)+n;save();return`<button class="b alt" onclick="vRestart()">New 10 words</button>`;});}
+function vRestart(){vdeck=vround=pick10();vmiss=[];vi=0;vgot=0;vflip=false;vRender();}
+vRender();
+
+// Progress and helpers
+let ME="";try{ME=localStorage.getItem("ep_name")||"";}catch(e){}
+let P={};function load(){P={};try{P=JSON.parse(localStorage.getItem("ep_"+ME)||"{}");}catch(e){}}load();
+function save(){try{localStorage.setItem("ep_"+ME,JSON.stringify(P));}catch(e){}}
+function mark(k,w){P[k]=P[k]||[];if(!P[k].includes(w)){P[k].push(w);save();}}
+function fmt(ms){const s=Math.round(ms/1000);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+function shuf(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pct(a,b){return b?Math.round(100*a/b)+"%":"none yet";}
+function showProg(){const k=(P.known||[]).length;$("#prog").innerHTML=`<h2>Your progress</h2><p class="meta"><span>Words learned</span><span>${k} of ${BANK.length}</span></p><progress max="${BANK.length}" value="${k}"></progress><p>Vocabulary checks: <b>${pct(P.vq,P.vqn)}</b> correct</p><p>Grammar: <b>${pct(P.g,P.gn)}</b> correct (${P.gn||0} questions answered)</p><p>Spelling: <b>${P.spell?pct(P.spell.c,P.spell.n):"none yet"}</b>, Dictation: <b>${P.dict?pct(P.dict.c,P.dict.n):"none yet"}</b>, Best test score: <b>${P.gt||0}/100</b></p><p>Readings finished: <b>${(P.r||[]).length} of ${TX.length}</b></p><button class="b alt" id="rs">Reset progress</button>`;$("#rs").onclick=()=>{P={};save();showProg();};}
+
+// Sound and phonemic chart
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-GB";u.rate=.85;speechSynthesis.speak(u);}catch(e){}}
+const PH=[["Vowels","iː:sheep,ɪ:ship,ʊ:good,uː:shoot,e:bed,ə:teacher,ɜː:bird,ɔː:door,æ:cat,ʌ:up,ɑː:far,ɒ:on"],["Diphthongs","ɪə:here,eɪ:wait,ʊə:tourist,ɔɪ:boy,əʊ:show,eə:hair,aɪ:my,aʊ:cow"],["Consonants","p:pea,b:boat,t:tea,d:dog,tʃ:cheese,dʒ:june,k:car,ɡ:go,f:fly,v:video,θ:think,ð:this,s:see,z:zoo,ʃ:shall,ʒ:television,m:man,n:now,ŋ:sing,h:hat,l:love,r:red,w:wet,j:yes"]];
+$("#chart").innerHTML='<p class="sub">Tap a sound to hear an example word.</p>'+PH.map(([t,s])=>`<h2>${t}</h2><div class="grid">`+s.split(",").map(x=>{const[a,b]=x.split(":");return `<button class="ph" onclick="say('${b}')"><b>${a}</b><span>${b}</span></button>`;}).join("")+"</div>").join("");
+
+// Quiz engine
+function Quiz(sel,items,cb){
+  let i=0,s=0,done=false;const el=$(sel),t0=Date.now();Quiz.t=Quiz.t||{};clearInterval(Quiz.t[sel]);Quiz.t[sel]=setInterval(()=>{const t=el.querySelector(".tm");if(t)t.textContent=fmt(Date.now()-t0);},1000);
+  function r(){
+    if(i>=items.length){
+      clearInterval(Quiz.t[sel]);const ms=Date.now()-t0,x=(cb&&cb(s,items.length,ms))||"";el.innerHTML=`<h2>${s} of ${items.length} correct</h2><p>Time: ${fmt(ms)}</p><button class="b">Try again</button>${x}`;
+      el.querySelector("button").onclick=()=>Quiz(sel,items,cb);return;
+    }
+    const q=items[i];done=false;
+    el.innerHTML=`<p class="meta"><span>Question ${i+1} of ${items.length}</span><span class="tm">${fmt(Date.now()-t0)}</span></p><p class="q">${q.q}</p>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" data-k="${k}">${o}</button>`).join("")}</div><div class="fb"></div>`;
+    el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.k));
+  }
+  function pick(k){
+    if(done)return;done=true;const q=items[i];
+    el.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add("ok");else if(j===k)b.classList.add("bad");});
+    if(k===q.a)s++;
+    el.querySelector(".fb").innerHTML=`<p><strong>${k===q.a?"Correct.":"Not quite."}</strong> ${q.e}</p><button class="b" id="nx">${i+1<items.length?"Next question":"See score"}</button>`;
+    el.querySelector("#nx").onclick=()=>{i++;r();};
+  }
+  r();
+}
+
+// Grammar
+const GR0=([
+{q:"She ___ in London since 2019.",o:["lives","has lived","is living","lived"],a:1,e:"Use the present perfect with since to link the past to now."},
+{q:"If I ___ more time, I would learn Spanish.",o:["had","have","will have","would have"],a:0,e:"Second conditional: if + past simple, would + verb."},
+{q:"He asked me where ___.",o:["I was going","was I going","am I going","I going"],a:0,e:"In reported questions, use statement word order, not question order."},
+{q:"I’m looking forward to ___ you.",o:["see","seeing","saw","be seeing"],a:1,e:"After the preposition to in this phrase, use the -ing form."},
+{q:"There isn’t ___ milk left.",o:["some","any","many","a few"],a:1,e:"Use any in negatives. Milk is uncountable, so many and a few don’t fit."},
+{q:"The report ___ by the team yesterday.",o:["finished","was finished","has finished","is finished"],a:1,e:"Passive voice in the past: was/were + past participle."},
+{q:"She’s the woman ___ car was stolen.",o:["who","whose","which","whom"],a:1,e:"Whose shows possession: the woman’s car."},
+{q:"By the time we arrived, the film ___.",o:["already started","has already started","had already started","was already starting"],a:2,e:"Past perfect shows an action that happened before another past moment."},
+{q:"You ___ wear a seatbelt. It’s the law.",o:["might","must","can","would"],a:1,e:"Must expresses a strong obligation or rule."},
+{q:"He is ___ than his brother.",o:["more tall","tallest","taller","most tall"],a:2,e:"Short adjectives add -er for comparisons."}
+]);
+
+const GX=`They ___ football when it started to rain.|were playing,played,have played,play|0|Past continuous describes an action in progress when another action interrupted it.
+I haven’t seen him ___ last week.|for,since,during,ago|1|Use since with a point in time.
+She suggested ___ to the cinema.|to go,going,go,went|1|After suggest, use the -ing form.
+You ___ smoke here. It is forbidden.|mustn’t,don’t have to,needn’t,might|0|Mustn’t means something is not allowed.
+This is the ___ film I have ever seen.|bad,worse,worst,baddest|2|Use the superlative worst for the most negative case.
+If it rains tomorrow, we ___ at home.|stay,will stay,would stay,stayed|1|First conditional: if + present simple, will + verb.
+He didn’t go out because he ___ a cold.|has,had,have,is having|1|Use the past simple to give a past reason.
+How ___ money do you earn?|many,much,few,a lot|1|Use much with uncountable nouns like money.
+I’m used to ___ up early.|get,getting,got,be getting|1|Be used to is followed by the -ing form.
+She asked me ___ I wanted tea or coffee.|if,that,what,which|0|Use if to report a yes or no question.
+We ___ dinner when the phone rang.|had,were having,have,are having|1|Past continuous for an action in progress at a past moment.
+Neither of them ___ the answer.|know,knows,knowing,are knowing|1|Neither takes a singular verb.
+I wish I ___ taller.|am,were,will be,have been|1|After wish for an unreal present, use the past form.
+The children are excited ___ the trip.|about,for,of,to|0|Excited is followed by the preposition about.
+She is good ___ maths.|at,in,on,for|0|Use good at for skills.
+She ___ breakfast every morning at seven.|has,have,having,is have|0|Third person singular present simple uses has.
+___ you ever been to Japan?|Did,Have,Do,Are|1|Use have + past participle for life experience.
+There ___ two books on the table.|is,are,be,was|1|Use are with plural nouns.
+I’m going to the dentist ___ Monday.|in,at,on,by|2|Use on with days of the week.
+He is ___ honest man.|a,an,the,some|1|Honest starts with a vowel sound, so use an.
+We arrived ___ the airport at noon.|in,at,on,to|1|Use at for a specific point such as an airport.
+My sister is taller ___ me.|that,than,then,as|1|Use than in comparisons.
+She can’t come because she ___ ill.|is,are,be,am|0|Use is with she.
+I ___ TV when you called.|watched,was watching,watch,have watched|1|Past continuous describes an action in progress.
+If I were you, I ___ him.|will call,would call,called,call|1|Second conditional uses would + verb.
+The window ___ by a ball.|broke,was broken,has broke,breaks|1|Passive voice: was + past participle.
+I haven’t got ___ money left.|some,any,a few,many|1|Use any in negatives with uncountable nouns.
+I enjoy ___ to music.|listen,to listen,listening,listened|2|Enjoy is followed by the -ing form.
+She decided ___ a new job.|finding,to find,find,found|1|Decide is followed by the to-infinitive.
+This is the book ___ I told you about.|who,whose,which,what|2|Use which for things in a relative clause.
+He has lived here ___ ten years.|since,for,during,from|1|Use for with a period of time.
+The water is ___ cold to swim in.|too,enough,so,very|0|Too ... to shows something is not possible.
+Would you mind ___ the window?|open,to open,opening,opened|2|Would you mind is followed by the -ing form.
+She is interested ___ art.|on,in,at,for|1|Interested is followed by in.
+Most ___ in this city are friendly.|people,peoples,person,a people|0|People is already plural and takes no -s here.
+I look forward ___ from you soon.|hear,to hear,to hearing,hearing|2|Look forward to is followed by the -ing form.
+He ran ___ than I expected.|fast,faster,fastest,more fast|1|Use faster for the comparative form.
+Please be quiet. The baby ___.|sleeps,is sleeping,slept,sleep|1|Present continuous for something happening now.
+When I got home, my brother ___ already eaten everything.|has,had,have,was|1|Past perfect: had + past participle.
+I’m afraid ___ spiders.|from,of,about,at|1|Afraid is followed by of.
+You ___ see a doctor if the pain continues.|should,would,might to,can to|0|Should gives advice.
+He doesn’t have ___ friends in this town.|some,any,much,a little|1|Use any in negatives with plural nouns.
+She speaks English very ___.|good,well,best,better than|1|Well is the adverb of good.
+The film was so ___ that I fell asleep.|bored,boring,bore,bores|1|Use -ing adjectives to describe the thing.
+I was ___ because the film was so long.|bored,boring,bore,bores|0|Use -ed adjectives for feelings.
+We’ll leave as soon as she ___.|will arrive,arrives,arrived,arriving|1|After as soon as, use the present simple for the future.
+If you mix red and blue, you ___ purple.|get,would get,got,will getting|0|Zero conditional uses the present simple in both parts.
+He asked her ___ she was from.|where,where was,where is,that|0|In reported questions, use statement word order.
+I’ve been waiting ___ three o’clock.|since,for,during,at|0|Use since with a starting point in time.
+Hardly ___ I sat down when the phone rang.|did,had,have,was|1|Hardly + had + subject + past participle.
+I have ___ homework to do tonight.|a lot of,many,a few,several|0|Homework is uncountable, so use a lot of.
+Can you lend me ___ money?|some,a,many,few|0|Use some with uncountable nouns in requests.
+He drives ___ carefully than his brother.|more,most,much,as|0|Use more with adverbs ending in -ly.
+Not only ___ late, but he also forgot the tickets.|he was,was he,he is,is he was|1|After Not only at the start, invert the subject and verb.
+She’s looking forward ___ her holiday.|to,for,at,on|0|Look forward is followed by to.
+___ you like some tea?|Do,Would,Are,Will|1|Would you like is a polite offer.
+I used to ___ football when I was young.|play,playing,played,plays|0|Used to is followed by the infinitive.
+The meeting has been ___ until next week.|put off,put on,put up,put in|0|Put off means postpone.
+He gave ___ smoking last year.|up,in,out,away|0|Give up means stop doing something.
+Please turn ___ the music. It’s too loud.|on,down,up,over|1|Turn down means reduce the volume.
+Look ___! A car is coming.|out,in,after,through|0|Look out is a warning.
+I’ll pick you ___ at eight.|up,on,off,in|0|Pick up means collect someone.
+She takes ___ her mother.|after,up,off,in|0|Take after means look or behave like.
+We ran ___ milk, so I went to the shop.|out of,off,away from,up to|0|Run out of means have no more.
+I’m tired, ___ I’m going to bed.|but,so,because,although|1|So introduces a result.
+I stayed at home ___ it was raining.|so,because,but,although|1|Because gives a reason.
+___ it was cold, she went swimming.|Because,So,Although,Therefore|2|Although shows contrast.
+He works hard; ___, he never gets promoted.|therefore,however,because,so|1|However shows contrast.
+Do you want tea ___ coffee?|and,or,but,so|1|Use or to offer a choice.
+She didn’t phone, ___ did she write.|and,nor,or,but|1|Nor follows a negative statement.
+I’ve never ___ sushi before.|eat,ate,eaten,eating|2|Use the past participle after have.
+The letters ___ yet.|didn’t arrive,haven’t arrived,aren’t arriving,hadn’t arrive|1|Present perfect is used with yet.
+By next year, I ___ here for ten years.|will work,will have worked,work,am working|1|Future perfect shows time up to a future point.
+He’s the ___ student in the class.|more intelligent,most intelligent,intelligenter,intelligentest|1|Long adjectives use most for the superlative.
+I’d rather ___ at home tonight.|stay,to stay,staying,stayed|0|Would rather is followed by the bare infinitive.
+Let’s ___ to the park.|going,go,to go,went|1|Let’s is followed by the base verb.
+She made me ___ the room.|clean,to clean,cleaning,cleaned|0|Make someone is followed by the base verb.
+He was made ___ the room.|clean,to clean,cleaning,cleaned|1|In the passive, make is followed by to + verb.
+I’m ___ interested in history than in science.|much,more,most,the|1|More ... than compares two things.
+There’s ___ milk in the fridge.|a little,a few,many,several|0|Milk is uncountable, so use a little.
+___ people came to the party than we expected.|Fewer,Less,Little,Much|0|Use fewer with countable nouns.
+I don’t know ___ he lives.|where,where does,where is,that|0|Use statement word order after I don’t know.
+Could you tell me where ___?|is the station,the station is,station is,the is station|1|Indirect questions use statement word order.
+Everyone ___ happy about the news.|is,are,were being,have|0|Everyone takes a singular verb.
+The police ___ looking for the thief.|is,are,was,has been|1|Police is treated as a plural noun.
+Mathematics ___ my favourite subject.|are,is,were,have|1|Subjects ending in -ics take a singular verb.
+She asked him ___ the door.|close,to close,closing,closed|1|Ask someone is followed by to + verb.
+I forgot ___ the door, so it was open all night.|locking,to lock,lock,locked|1|Forget + to-infinitive means you did not do it.
+I remember ___ him at the party last year.|meeting,to meet,meet,met|0|Remember + -ing refers to a past memory.
+If she had studied, she ___ the exam.|would pass,would have passed,passed,will pass|1|Third conditional: if + past perfect, would have + past participle.`.trim().split("\n").map(l=>{const[q,o,a,e]=l.split("|");return{q,o:o.split(","),a:+a,e};});
+const GR=GR0.concat(GX);
+function newG(){Quiz("#gq",shuf(GR).slice(0,10),(s,n)=>{P.g=(P.g||0)+s;P.gn=(P.gn||0)+n;save();return`<button class="b alt" onclick="newG()">New 10 questions</button>`;});}
+newG();
+// Reading
+const G={intense:"very strong or extreme",boost:"to increase or improve",gentle:"soft; not rough or harsh",routine:"your regular daily habits",maintain:"to keep something going"};
+const text="Many people believe that exercise must be <b>intense</b> to be useful, but research suggests otherwise. A daily walk of thirty minutes can improve mood, protect the heart, and even <b>boost</b> creativity. Unlike running, walking is <b>gentle</b> on the joints, so almost anyone can do it. It also costs nothing and needs no special equipment. One study found that people who walked outdoors came up with more original ideas than those who sat at a desk. Doctors therefore encourage patients to build short walks into their <b>routine</b>, such as getting off the bus one stop early. Small habits, they say, are easier to <b>maintain</b> than dramatic changes.";
+$("#passage").innerHTML="<h3>The Quiet Benefits of Walking</h3>"+text.replace(/<b>(\w+)<\/b>/g,'<button class="w" data-w="$1">$1</button>');
+document.querySelectorAll(".w").forEach(b=>b.onclick=()=>{$("#gloss").innerHTML=`<b>${b.dataset.w}</b>: ${G[b.dataset.w]}`;});
+const RQ0=([
+{q:"What is the main idea of the text?",o:["Running is the best exercise","Gentle exercise like walking has real benefits","Doctors dislike intense exercise","Walking only helps creativity"],a:1,e:"The text argues that a simple daily walk improves mood, heart health, and creativity."},
+{q:"Why can almost anyone walk for exercise?",o:["It is gentle on the joints","It is very fast","It needs special shoes","It is always done outdoors"],a:0,e:"The text says walking is gentle on the joints, unlike running."},
+{q:"What did the study find?",o:["Desk workers were happier","Outdoor walkers had more original ideas","Walking costs too much","Runners lived longer"],a:1,e:"People who walked outdoors came up with more original ideas than people who sat at a desk."},
+{q:"What do doctors suggest?",o:["Buy exercise equipment","Run every morning","Get off the bus one stop early","Avoid habits"],a:2,e:"They recommend short walks built into your routine, such as getting off the bus a stop early."}
+]);
+const TX=[
+{t:"The Quiet Benefits of Walking",x:text,g:G,q:RQ0},
+{t:"A Saturday at the Market",x:"Every Saturday morning, the town square turns into a busy market. Farmers arrive before sunrise to set up their stalls with fresh vegetables, bread, and cheese. Customers enjoy chatting with the sellers and tasting samples before they buy. Prices are slightly higher than in the supermarket, but many shoppers think the quality is worth it. Maria has been coming for ten years. She says she can <b>trust</b> the farmers because she knows where her food comes from. Last month, a heavy storm threatened to <b>cancel</b> the market, yet most stalls still opened, and customers happily <b>queued</b> in the rain.",g:{trust:"to believe someone is honest and reliable",cancel:"to decide that a planned event will not happen",queued:"stood in a line, waiting"},q:[
+{q:"When does the market take place?",o:["Every Saturday morning","Every day","On Sunday evenings","Only in summer"],a:0,e:"The town square turns into a market every Saturday morning."},
+{q:"Why does Maria like the market?",o:["She knows where her food comes from","It is cheaper","It is closer to her home","It has no queues"],a:0,e:"She says she can trust the farmers because she knows where her food comes from."},
+{q:"What happened during the storm?",o:["The market closed for a month","Most stalls still opened","Customers stayed home","Prices went down"],a:1,e:"Most stalls opened and customers queued in the rain."}]},
+{t:"Learning a Language Online",x:"More and more people are learning languages through apps and online lessons. The main <b>advantage</b> is flexibility: students can study at any time and repeat difficult parts as often as they like. However, many learners find it hard to stay <b>motivated</b> without a teacher or classmates. Experts suggest setting small daily goals, such as learning five new words, and speaking aloud whenever possible. Combining online study with real conversation, they say, gives the best <b>progress</b>.",g:{advantage:"a good point that helps you",motivated:"feeling keen to do something",progress:"improvement over time"},q:[
+{q:"What is the main advantage of online lessons?",o:["They are free","Students can study whenever they want","They need a classroom","They have no homework"],a:1,e:"The text says the main advantage is flexibility."},
+{q:"What problem do many learners have?",o:["The apps are too expensive","They forget their password","It is hard to stay motivated alone","There are too many teachers"],a:2,e:"Many learners find it hard to stay motivated without a teacher or classmates."},
+{q:"What do experts recommend?",o:["Studying only at weekends","Setting small daily goals","Avoiding conversation","Learning fifty words a day"],a:1,e:"They suggest small daily goals and speaking aloud."}]}
+];
+function showText(n){const T=TX[n];$("#passage").innerHTML="<h3>"+T.t+"</h3>"+T.x.replace(/<b>(\w+)<\/b>/g,'<button class="w" data-w="$1">$1</button>');$("#gloss").textContent="Tap a dotted word to see its meaning.";document.querySelectorAll(".w").forEach(b=>b.onclick=()=>{$("#gloss").innerHTML="<b>"+b.dataset.w+"</b>: "+T.g[b.dataset.w];});Quiz("#rq",T.q,()=>{P.r=P.r||[];if(!P.r.includes(n))P.r.push(n);save();return`<button class="b alt" onclick="nextText()">Next text</button>`;});}
+function nextText(){const s=$("#rsel");s.value=(+s.value+1)%TX.length;showText(+s.value);scrollTo(0,0);}
+$("#reading").insertAdjacentHTML("afterbegin",'<select id="rsel" aria-label="Choose a text" style="width:100%;padding:12px;margin-bottom:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:1rem">'+TX.map((T,i)=>`<option value="${i}">Text ${i+1}: ${T.t}</option>`).join("")+"</select>");
+$("#rsel").onchange=e=>showText(+e.target.value);
+showText(0);
+// Name, test, top results, spelling and dictation
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function gate(){document.querySelector("main").classList.toggle("noname",!ME);$("#hi").innerHTML=ME?`Hi, <b>${esc(ME)}</b>. <button class="w" id="cn">Change name</button>`:"";if(ME)$("#cn").onclick=()=>{ME="";try{localStorage.setItem("ep_name","");}catch(e){}load();gate();};}
+function setName(){const v=$("#nmi").value.trim().slice(0,30);if(!v){$("#nmi").focus();return;}ME=v;try{localStorage.setItem("ep_name",ME);}catch(e){}load();$("#nmi").value="";gate();}
+$("#nmb").onclick=setName;$("#nmi").onkeydown=ev=>{if(ev.key==="Enter")setName();};
+gate();
+function topList(){try{return JSON.parse(localStorage.getItem("ep_top")||"[]");}catch(e){return[];}}
+function addTop(r){const a=topList();a.push(r);a.sort((x,y)=>y.s-x.s||x.t-y.t);try{localStorage.setItem("ep_top",JSON.stringify(a.slice(0,10)));}catch(e){}}
+function showTop(){const a=topList();$("#top").innerHTML="<h2>Top 10 results</h2>"+(a.length?a.map((r,i)=>`<p class="meta" style="font-size:1rem;color:var(--ink)"><span>${i+1}. ${esc(r.n)}</span><span><b>${r.s}/${r.q}</b> in ${fmt(r.t)}</span></p>`).join(""):"<p>No test results yet. Take the grammar test to be the first.</p>")+"<p class=\"sub\">Results are saved on this device.</p>";}
+function startTest(){
+  const Q=shuf(GR),A=Q.map(()=>-1),el=$("#gq");let i=0,warned=false;const t0=Date.now();
+  $("#tt").hidden=true;Quiz.t=Quiz.t||{};clearInterval(Quiz.t["#gq"]);
+  Quiz.t["#gq"]=setInterval(()=>{const t=el.querySelector(".tm");if(t)t.textContent=fmt(Date.now()-t0);},1000);
+  function r(){const q=Q[i],n=A.filter(x=>x>=0).length;
+    el.innerHTML=`<p class="meta"><span>Question ${i+1} of ${Q.length} (${n} answered)</span><span class="tm">${fmt(Date.now()-t0)}</span></p><p class="q">${q.q}</p><div class="opts">${q.o.map((o,k)=>`<button class="opt${A[i]===k?" sel":""}" data-k="${k}">${o}</button>`).join("")}</div><div class="row" style="margin-top:14px"><button class="b alt" id="pv"${i?"":" disabled"}>Back</button>${i<Q.length-1?'<button class="b" id="nx">Next</button>':'<button class="b" id="sb">Submit test</button>'}</div>`;
+    el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{A[i]=+b.dataset.k;r();});
+    $("#pv").onclick=()=>{i--;r();};
+    const nx=$("#nx");if(nx)nx.onclick=()=>{i++;r();};
+    const sb=$("#sb");if(sb)sb.onclick=()=>{const u=A.filter(x=>x<0).length;if(u&&!warned){warned=true;sb.textContent="Submit anyway ("+u+" unanswered)";return;}done();};
+  }
+  function done(){clearInterval(Quiz.t["#gq"]);const ms=Date.now()-t0,s=Q.reduce((c,q,k)=>c+(A[k]===q.a?1:0),0);addTop({n:ME,s,q:Q.length,t:ms});P.gt=Math.max(P.gt||0,s);save();
+    el.innerHTML=`<h2>${esc(ME)}, you scored ${s} out of ${Q.length}</h2><p>Time: ${fmt(ms)}</p><button class="b" id="rv">Review answers</button><button class="b alt" id="bk">Back to practice</button><div id="rvl"></div>`;
+    $("#rv").onclick=()=>{$("#rvl").innerHTML=Q.map((q,k)=>A[k]===q.a?"":`<p><b>${q.q}</b><br>Your answer: ${A[k]<0?"none":q.o[A[k]]}<br>Correct: ${q.o[q.a]}<br>${q.e}</p>`).join("")||"<p>All correct. Excellent!</p>";$("#rv").hidden=true;};
+    $("#bk").onclick=()=>{$("#tt").hidden=false;newG();};}
+  r();
+}
+$("#tt").onclick=startTest;
+function vType(mode){
+  const L=vround,el=$("#vocab"),sp=mode==="spell";let i=0,s=0;
+  function r(){
+    if(i>=L.length){P[mode]=P[mode]||{c:0,n:0};P[mode].c+=s;P[mode].n+=L.length;save();
+      el.innerHTML=`<h2>${s} of ${L.length} correct</h2><button class="b" id="ag">Try again</button><button class="b alt" onclick="vRestart()">New 10 words</button>`;$("#ag").onclick=()=>vType(mode);return;}
+    const [w,d,,p]=L[i];let ck=false;
+    el.innerHTML=`<p class="meta"><span>${sp?"Spelling":"Dictation"} ${i+1} of ${L.length}</span></p><p class="q">${sp?d+" /"+p+"/ ("+w.length+" letters)":"Listen and type the word."}</p><button class="b alt" id="ls" style="margin:0 0 10px">🔊 Listen</button><input class="inp" id="ti" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Type the word"><button class="b" id="ck">Check</button><div class="fb"></div>`;
+    $("#ls").onclick=()=>say(w);if(!sp)say(w);
+    const go=()=>{if(!ck){ck=true;const ok=$("#ti").value.trim().toLowerCase()===w;if(ok)s++;$("#ti").disabled=true;el.querySelector(".fb").innerHTML=`<p><strong>${ok?"Correct.":"Not quite."}</strong> ${w} /${p}/</p>`;$("#ck").textContent=i+1<L.length?"Next word":"See score";}else{i++;r();}};
+    $("#ck").onclick=go;$("#ti").onkeydown=ev=>{if(ev.key==="Enter")go();};$("#ti").focus();
+  }
+  r();
+}
+</script>
+</body>
+</html>
